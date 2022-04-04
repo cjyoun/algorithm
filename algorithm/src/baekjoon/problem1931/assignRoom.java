@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class assignRoom {
+	
 	public static void main(String[] args) {
 		
 		Scanner sc = new Scanner(System.in);
@@ -24,54 +25,91 @@ public class assignRoom {
 		int [][] array = new int[conferenceCount][2];
 		
 		for(int i=0; i<conferenceCount; i++) {
-			array[i][0] = sc.nextInt();
-			array[i][1] = sc.nextInt();
+			array[i][0] = sc.nextInt();	// 첫번째 열 (시작시간)
+			array[i][1] = sc.nextInt();	// 두번째 열 (종료시간)
 		}
+
+		quickSort(array, 0, conferenceCount -1, 0); // 퀵정렬로 첫번째 열 정렬 
+
+		quickSort(array, 0, conferenceCount -1, 1); // 퀵정렬로 번째 열 정렬 
+        
 		
+		int count = 0;	 // 연속된 회의식 개수 
+		int endTime = 0;
 		
+		for(int i=0; i<conferenceCount; i++) {
+			if( array[i][0] >= endTime) {
+				endTime = array[i][1];	// 끝나는 시간을 설정 
+				count++;
+			}
+		}	
 		
-		
-		
-		
-//		Scanner sc = new Scanner(System.in);
-//	
-//		int conferenceCount = sc.nextInt();
-//		
-//		int [][] array = new int[conferenceCount][2];
-//		
-//		for(int i=0; i<conferenceCount; i++) {
-//			array[i][0] = sc.nextInt();
-//			array[i][1] = sc.nextInt();
-//		}
-//		
-//		int count = 0;
-//		int count2 = 0;
-//		int maxCount = 0;
-//		
-//		System.out.println(Arrays.deepToString(array) + " / " + array[0][0]);
-//
-//		for(int i=0; i<conferenceCount; i++) {
-//			int k=i;
-//			for(int j=0; j<conferenceCount; j++) {
-//				if(i==j) {
-//					continue;
-//				}
-//				if( (array[k][0]<array[j][0]) && (array[k][1]<=array[j][0])) {
-//					count++;
-//					k=j;
-//				}
-//			}
-//			count2 = count;
-//			if(count2> maxCount) {
-//				maxCount = count2;
-//			}
-//			count = 0;
-//		}
-//		
-//		
-//		System.out.println(maxCount+1);
-//		
-		
+		System.out.println(count);
 		
 	}
+	
+	
+	public static void quickSort(int[][] array, int start, int end, int index){
+        
+        if(start>=end) //원소가 1개인 경우 종료
+        return;
+        
+        int pivot = start; //피벗은 첫 번째 원소
+        int left = start+1;
+        int right = end;
+        
+        if(index==0) {
+        	while ( left <= right){
+                
+                //피벗보다 큰 데이터를 찾을 때까지 반복
+                while (left <= end && array[left][0] <= array[pivot][0])
+                    left+=1;
+                
+                //피벗보다 작은 데이터를 찾을 때까지 반복
+                while(right > start && array[right][0] >= array[pivot][0])
+                    right-=1;
+                
+                if(left > right){ // 엇갈렸다면 작은 데이터와 피벗을 교체
+                    int[] tmp = array[right];
+                    array[right] = array[pivot];
+                    array[pivot] = tmp;
+                }else{ //엇갈리지 않았다면 적은 데이터와 큰 데이터를 교체
+                    int[] tmp = array[right];
+                    array[right] = array[left];
+                    array[left] = tmp;
+                }
+                
+                //분할  이후 왼쪽 부분과 오른쪽 부분에서 각각 정렬 수행
+                quickSort(array, start, right -1, 0);
+                quickSort(array, right +1, end, 0);
+            }
+        }else {
+        	while ( left <= right){
+                
+                //피벗보다 큰 데이터를 찾을 때까지 반복
+                while (left <= end && array[left][1] <= array[pivot][1])
+                    left+=1;
+                
+                //피벗보다 작은 데이터를 찾을 때까지 반복
+                while(right > start && array[right][1] >= array[pivot][1])
+                    right-=1;
+                
+                if(left > right){ // 엇갈렸다면 작은 데이터와 피벗을 교체
+                    int[] tmp = array[right];
+                    array[right] = array[pivot];
+                    array[pivot] = tmp;
+                }else{ //엇갈리지 않았다면 적은 데이터와 큰 데이터를 교체
+                    int[] tmp = array[right];
+                    array[right] = array[left];
+                    array[left] = tmp;
+                }
+                
+                //분할  이후 왼쪽 부분과 오른쪽 부분에서 각각 정렬 수행
+                quickSort(array, start, right -1, 1);
+                quickSort(array, right +1, end, 1);
+            }
+        }
+        
+    }
+
 }

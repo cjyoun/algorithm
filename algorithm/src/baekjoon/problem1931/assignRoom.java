@@ -1,6 +1,7 @@
 package baekjoon.problem1931;
 
 import java.util.Arrays;
+import java.util.Comparator;
 
 /*
 한 개의 회의실이 있는데 이를 사용하고자 하는 N개의 회의에 대하여 회의실 사용표를 만들려고 한다. 
@@ -29,10 +30,22 @@ public class assignRoom {
 			array[i][1] = sc.nextInt();	// 두번째 열 (종료시간)
 		}
 
-		quickSort(array, 0, conferenceCount -1, 0); // 퀵정렬로 첫번째 열 정렬 
+		// https://intrepidgeeks.com/tutorial/bai-jun-1931-meeting-room-arrangement-java-java 참
+		// 끝나는 시간을 기준으로 정렬하기 위해 compare 재정의 
+		Arrays.sort(array, new Comparator<int[]>() {
+		//array이란 변수를 이렇게 정렬하겠다는 문법임
+			@Override
+			public int compare(int[] o1, int[] o2) {
+				
+				// 종료시간이 같을 경우 시작시간이 빠른순으로 정렬해야한다.  
+				if(o1[1] == o2[1]) {// 
+					return o1[0] - o2[0];
+				}
+				// 종료시간을 오름 차순으로 정렬
+				return o1[1] - o2[1];
+			}
 
-		quickSort(array, 0, conferenceCount -1, 1); // 퀵정렬로 번째 열 정렬 
-        
+		});
 		
 		int count = 0;	 // 연속된 회의식 개수 
 		int endTime = 0;
@@ -48,68 +61,5 @@ public class assignRoom {
 		
 	}
 	
-	
-	public static void quickSort(int[][] array, int start, int end, int index){
-        
-        if(start>=end) //원소가 1개인 경우 종료
-        return;
-        
-        int pivot = start; //피벗은 첫 번째 원소
-        int left = start+1;
-        int right = end;
-        
-        if(index==0) {
-        	while ( left <= right){
-                
-                //피벗보다 큰 데이터를 찾을 때까지 반복
-                while (left <= end && array[left][0] <= array[pivot][0])
-                    left+=1;
-                
-                //피벗보다 작은 데이터를 찾을 때까지 반복
-                while(right > start && array[right][0] >= array[pivot][0])
-                    right-=1;
-                
-                if(left > right){ // 엇갈렸다면 작은 데이터와 피벗을 교체
-                    int[] tmp = array[right];
-                    array[right] = array[pivot];
-                    array[pivot] = tmp;
-                }else{ //엇갈리지 않았다면 적은 데이터와 큰 데이터를 교체
-                    int[] tmp = array[right];
-                    array[right] = array[left];
-                    array[left] = tmp;
-                }
-                
-                //분할  이후 왼쪽 부분과 오른쪽 부분에서 각각 정렬 수행
-                quickSort(array, start, right -1, 0);
-                quickSort(array, right +1, end, 0);
-            }
-        }else {
-        	while ( left <= right){
-                
-                //피벗보다 큰 데이터를 찾을 때까지 반복
-                while (left <= end && array[left][1] <= array[pivot][1])
-                    left+=1;
-                
-                //피벗보다 작은 데이터를 찾을 때까지 반복
-                while(right > start && array[right][1] >= array[pivot][1])
-                    right-=1;
-                
-                if(left > right){ // 엇갈렸다면 작은 데이터와 피벗을 교체
-                    int[] tmp = array[right];
-                    array[right] = array[pivot];
-                    array[pivot] = tmp;
-                }else{ //엇갈리지 않았다면 적은 데이터와 큰 데이터를 교체
-                    int[] tmp = array[right];
-                    array[right] = array[left];
-                    array[left] = tmp;
-                }
-                
-                //분할  이후 왼쪽 부분과 오른쪽 부분에서 각각 정렬 수행
-                quickSort(array, start, right -1, 1);
-                quickSort(array, right +1, end, 1);
-            }
-        }
-        
-    }
 
 }
